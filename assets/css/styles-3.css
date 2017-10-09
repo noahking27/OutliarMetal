@@ -40,6 +40,20 @@
     background: red;
 }
 
+#album {
+    margin-top: 10em;
+}
+
+#promo {
+    background-image: url("../images/outliar.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#outliarMetal {
+    font-family: 'Metal Mania', cursive;
+}
+
 
 /* ======= Base ======= */
 

@@ -8,33 +8,33 @@
  * http://jaysalvat.com/
  * --------------------------------------------------------------------------*/
 
-(function ($) {
+(function($) {
     'use strict';
 
     var defaults = {
-        slide:              0,
-        delay:              5000,
-        preload:            false,
-        preloadImage:       false,
-        preloadVideo:       false,
-        timer:              true,
-        overlay:            false,
-        autoplay:           true,
-        shuffle:            false,
-        cover:              true,
-        color:              null,
-        align:              'center',
-        valign:             'center',
-        transition:         'fade',
+        slide: 0,
+        delay: 5000,
+        preload: false,
+        preloadImage: false,
+        preloadVideo: false,
+        timer: true,
+        overlay: false,
+        autoplay: true,
+        shuffle: false,
+        cover: true,
+        color: null,
+        align: 'center',
+        valign: 'center',
+        transition: 'fade',
         transitionDuration: 1000,
         transitionRegister: [],
-        animation:          null,
-        animationDuration:  'auto',
-        animationRegister:  [],
-        init:  function () {},
-        play:  function () {},
-        pause: function () {},
-        walk:  function () {},
+        animation: null,
+        animationDuration: 'auto',
+        animationRegister: [],
+        init: function() {},
+        play: function() {},
+        pause: function() {},
+        walk: function() {},
         slides: [
             // {
             //  src:                null,
@@ -58,18 +58,18 @@
 
     var videoCache = {};
 
-    var Vegas = function (elmt, options) {
-        this.elmt         = elmt;
-        this.settings     = $.extend({}, defaults, $.vegas.defaults, options);
-        this.slide        = this.settings.slide;
-        this.total        = this.settings.slides.length;
-        this.noshow       = this.total < 2;
-        this.paused       = !this.settings.autoplay || this.noshow;
-        this.$elmt        = $(elmt);
-        this.$timer       = null;
-        this.$overlay     = null;
-        this.$slide       = null;
-        this.timeout      = null;
+    var Vegas = function(elmt, options) {
+        this.elmt = elmt;
+        this.settings = $.extend({}, defaults, $.vegas.defaults, options);
+        this.slide = this.settings.slide;
+        this.total = this.settings.slides.length;
+        this.noshow = this.total < 2;
+        this.paused = !this.settings.autoplay || this.noshow;
+        this.$elmt = $(elmt);
+        this.$timer = null;
+        this.$overlay = null;
+        this.$slide = null;
+        this.timeout = null;
 
         this.transitions = [
             'fade', 'fade2',
@@ -95,20 +95,20 @@
         ];
 
         if (this.settings.transitionRegister instanceof Array === false) {
-            this.settings.transitionRegister = [ this.settings.transitionRegister ];
+            this.settings.transitionRegister = [this.settings.transitionRegister];
         }
 
         if (this.settings.animationRegister instanceof Array === false) {
-            this.settings.animationRegister = [ this.settings.animationRegister ];
+            this.settings.animationRegister = [this.settings.animationRegister];
         }
 
         this.transitions = this.transitions.concat(this.settings.transitionRegister);
-        this.animations  = this.animations.concat(this.settings.animationRegister);
+        this.animations = this.animations.concat(this.settings.animationRegister);
 
         this.support = {
-            objectFit:  'objectFit'  in document.body.style,
+            objectFit: 'objectFit' in document.body.style,
             transition: 'transition' in document.body.style || 'WebkitTransition' in document.body.style,
-            video:      $.vegas.isVideoCompatible()
+            video: $.vegas.isVideoCompatible()
         };
 
         if (this.settings.shuffle === true) {
@@ -119,14 +119,14 @@
     };
 
     Vegas.prototype = {
-        _init: function () {
+        _init: function() {
             var $wrapper,
                 $overlay,
                 $timer,
-                isBody  = this.elmt.tagName === 'BODY',
-                timer   = this.settings.timer,
+                isBody = this.elmt.tagName === 'BODY',
+                timer = this.settings.timer,
                 overlay = this.settings.overlay,
-                self    = this;
+                self = this;
 
             // Preloading
             this._preload();
@@ -137,15 +137,15 @@
 
                 $wrapper = $('<div class="vegas-wrapper">')
                     .css('overflow', this.$elmt.css('overflow'))
-                    .css('padding',  this.$elmt.css('padding'));
+                    .css('padding', this.$elmt.css('padding'));
 
                 // Some browsers don't compute padding shorthand
                 if (!this.$elmt.css('padding')) {
                     $wrapper
-                        .css('padding-top',    this.$elmt.css('padding-top'))
+                        .css('padding-top', this.$elmt.css('padding-top'))
                         .css('padding-bottom', this.$elmt.css('padding-bottom'))
-                        .css('padding-left',   this.$elmt.css('padding-left'))
-                        .css('padding-right',  this.$elmt.css('padding-right'));
+                        .css('padding-left', this.$elmt.css('padding-left'))
+                        .css('padding-right', this.$elmt.css('padding-right'));
                 }
 
                 this.$elmt.clone(true).children().appendTo($wrapper);
@@ -178,7 +178,7 @@
                 this.$elmt.append($wrapper);
             }
 
-            setTimeout(function () {
+            setTimeout(function() {
                 self.trigger('init');
                 self._goto(self.slide);
 
@@ -188,7 +188,7 @@
             }, 1);
         },
 
-        _preload: function () {
+        _preload: function() {
             var img, i;
 
             for (i = 0; i < this.settings.slides.length; i++) {
@@ -211,21 +211,21 @@
             }
         },
 
-        _random: function (array) {
+        _random: function(array) {
             return array[Math.floor(Math.random() * (array.length - 1))];
         },
 
-        _slideShow: function () {
+        _slideShow: function() {
             var self = this;
 
             if (this.total > 1 && !this.paused && !this.noshow) {
-                this.timeout = setTimeout(function () {
+                this.timeout = setTimeout(function() {
                     self.next();
                 }, this._options('delay'));
             }
         },
 
-        _timer: function (state) {
+        _timer: function(state) {
             var self = this;
 
             clearTimeout(this.timeout);
@@ -236,24 +236,24 @@
 
             this.$timer
                 .removeClass('vegas-timer-running')
-                    .find('div')
-                        .css('transition-duration', '0ms');
+                .find('div')
+                .css('transition-duration', '0ms');
 
             if (this.paused || this.noshow) {
                 return;
             }
 
             if (state) {
-                setTimeout(function () {
-                   self.$timer
-                    .addClass('vegas-timer-running')
+                setTimeout(function() {
+                    self.$timer
+                        .addClass('vegas-timer-running')
                         .find('div')
-                            .css('transition-duration', self._options('delay') - 100 + 'ms');
+                        .css('transition-duration', self._options('delay') - 100 + 'ms');
                 }, 100);
             }
         },
 
-        _video: function (srcs) {
+        _video: function(srcs) {
             var video,
                 source,
                 cacheKey = srcs.toString();
@@ -263,13 +263,13 @@
             }
 
             if (srcs instanceof Array === false) {
-                srcs = [ srcs ];
+                srcs = [srcs];
             }
 
             video = document.createElement('video');
             video.preload = true;
 
-            srcs.forEach(function (src) {
+            srcs.forEach(function(src) {
                 source = document.createElement('source');
                 source.src = src;
                 video.appendChild(source);
@@ -280,15 +280,15 @@
             return video;
         },
 
-        _fadeOutSound: function (video, duration) {
-            var self   = this,
-                delay  = duration / 10,
+        _fadeOutSound: function(video, duration) {
+            var self = this,
+                delay = duration / 10,
                 volume = video.volume - 0.09;
 
             if (volume > 0) {
                 video.volume = volume;
 
-                setTimeout(function () {
+                setTimeout(function() {
                     self._fadeOutSound(video, duration);
                 }, delay);
             } else {
@@ -296,21 +296,21 @@
             }
         },
 
-        _fadeInSound: function (video, duration) {
-            var self   = this,
-                delay  = duration / 10,
+        _fadeInSound: function(video, duration) {
+            var self = this,
+                delay = duration / 10,
                 volume = video.volume + 0.09;
 
             if (volume < 1) {
                 video.volume = volume;
 
-                setTimeout(function () {
+                setTimeout(function() {
                     self._fadeInSound(video, duration);
                 }, delay);
             }
         },
 
-        _options: function (key, i) {
+        _options: function(key, i) {
             if (i === undefined) {
                 i = this.slide;
             }
@@ -322,7 +322,7 @@
             return this.settings[key];
         },
 
-        _goto: function (nb) {
+        _goto: function(nb) {
             if (typeof this.settings.slides[nb] === 'undefined') {
                 nb = 0;
             }
@@ -332,23 +332,23 @@
             var $slide,
                 $inner,
                 $video,
-                $slides       = this.$elmt.children('.vegas-slide'),
-                src           = this.settings.slides[nb].src,
+                $slides = this.$elmt.children('.vegas-slide'),
+                src = this.settings.slides[nb].src,
                 videoSettings = this.settings.slides[nb].video,
-                delay         = this._options('delay'),
-                align         = this._options('align'),
-                valign        = this._options('valign'),
-                cover         = this._options('cover'),
-                color         = this._options('color') || this.$elmt.css('background-color'),
-                self          = this,
-                total         = $slides.length,
+                delay = this._options('delay'),
+                align = this._options('align'),
+                valign = this._options('valign'),
+                cover = this._options('cover'),
+                color = this._options('color') || this.$elmt.css('background-color'),
+                self = this,
+                total = $slides.length,
                 video,
                 img;
 
-            var transition         = this._options('transition'),
+            var transition = this._options('transition'),
                 transitionDuration = this._options('transitionDuration'),
-                animation          = this._options('animation'),
-                animationDuration  = this._options('animationDuration');
+                animation = this._options('animation'),
+                animationDuration = this._options('animationDuration');
 
             if (cover !== 'repeat') {
                 if (cover === true) {
@@ -397,7 +397,7 @@
                     video = this._video(videoSettings.src);
                 }
 
-                video.loop  = videoSettings.loop !== undefined ? videoSettings.loop : true;
+                video.loop = videoSettings.loop !== undefined ? videoSettings.loop : true;
                 video.muted = videoSettings.mute !== undefined ? videoSettings.mute : true;
 
                 if (video.muted === false) {
@@ -415,24 +415,24 @@
                     $video
                         .css('object-position', align + ' ' + valign)
                         .css('object-fit', cover)
-                        .css('width',  '100%')
+                        .css('width', '100%')
                         .css('height', '100%');
                 } else if (cover === 'contain') {
                     $video
-                        .css('width',  '100%')
+                        .css('width', '100%')
                         .css('height', '100%');
                 }
 
                 $slide.append($video);
 
-            // Image
+                // Image
 
             } else {
                 img = new Image();
 
                 $inner = $('<div class="vegas-slide-inner"></div>')
-                    .css('background-image',    'url(' + src + ')')
-                    .css('background-color',    color)
+                    .css('background-image', 'url(' + src + ')')
+                    .css('background-color', color)
                     .css('background-position', align + ' ' + valign);
 
                 if (cover === 'repeat') {
@@ -444,7 +444,7 @@
                 if (this.support.transition && animation) {
                     $inner
                         .addClass('vegas-animation-' + animation)
-                        .css('animation-duration',  animationDuration + 'ms');
+                        .css('animation-duration', animationDuration + 'ms');
                 }
 
                 $slide.append($inner);
@@ -462,17 +462,17 @@
 
             self._timer(false);
 
-            function go () {
+            function go() {
                 self._timer(true);
 
-                setTimeout(function () {
+                setTimeout(function() {
                     if (transition) {
                         if (self.support.transition) {
                             $slides
                                 .css('transition', 'all ' + transitionDuration + 'ms')
                                 .addClass('vegas-transition-' + transition + '-out');
 
-                            $slides.each(function () {
+                            $slides.each(function() {
                                 var video = $slides.find('video').get(0);
 
                                 if (video) {
@@ -490,7 +490,7 @@
                     }
 
                     for (var i = 0; i < $slides.length - 4; i++) {
-                         $slides.eq(i).remove();
+                        $slides.eq(i).remove();
                     }
 
                     self.trigger('walk');
@@ -510,7 +510,7 @@
             }
         },
 
-        shuffle: function () {
+        shuffle: function() {
             var temp,
                 rand;
 
@@ -523,7 +523,7 @@
             }
         },
 
-        play: function () {
+        play: function() {
             if (this.paused) {
                 this.paused = false;
                 this.next();
@@ -531,13 +531,13 @@
             }
         },
 
-        pause: function () {
+        pause: function() {
             this._timer(false);
             this.paused = true;
             this.trigger('pause');
         },
 
-        toggle: function () {
+        toggle: function() {
             if (this.paused) {
                 this.play();
             } else {
@@ -545,21 +545,21 @@
             }
         },
 
-        playing: function () {
+        playing: function() {
             return !this.paused && !this.noshow;
         },
 
-        current: function (advanced) {
+        current: function(advanced) {
             if (advanced) {
                 return {
                     slide: this.slide,
-                    data:  this.settings.slides[this.slide]
+                    data: this.settings.slides[this.slide]
                 };
             }
             return this.slide;
         },
 
-        jump: function (nb) {
+        jump: function(nb) {
             if (nb < 0 || nb > this.total - 1 || nb === this.slide) {
                 return;
             }
@@ -568,7 +568,7 @@
             this._goto(this.slide);
         },
 
-        next: function () {
+        next: function() {
             this.slide++;
 
             if (this.slide >= this.total) {
@@ -578,7 +578,7 @@
             this._goto(this.slide);
         },
 
-        previous: function () {
+        previous: function() {
             this.slide--;
 
             if (this.slide < 0) {
@@ -588,11 +588,11 @@
             this._goto(this.slide);
         },
 
-        trigger: function (fn) {
+        trigger: function(fn) {
             var params = [];
 
             if (fn === 'init') {
-                params = [ this.settings ];
+                params = [this.settings];
             } else {
                 params = [
                     this.slide,
@@ -607,7 +607,7 @@
             }
         },
 
-        options: function (key, value) {
+        options: function(key, value) {
             var oldSlides = this.settings.slides.slice();
 
             if (typeof key === 'object') {
@@ -623,13 +623,13 @@
 
             // In case slides have changed
             if (this.settings.slides !== oldSlides) {
-                this.total  = this.settings.slides.length;
+                this.total = this.settings.slides.length;
                 this.noshow = this.total < 2;
                 this._preload();
             }
         },
 
-        destroy: function () {
+        destroy: function() {
             clearTimeout(this.timeout);
 
             this.$elmt.removeClass('vegas-container');
@@ -655,13 +655,13 @@
             returns;
 
         if (options === undefined || typeof options === 'object') {
-            return this.each(function () {
+            return this.each(function() {
                 if (!this._vegas) {
                     this._vegas = new Vegas(this, options);
                 }
             });
         } else if (typeof options === 'string') {
-            this.each(function () {
+            this.each(function() {
                 var instance = this._vegas;
 
                 if (!instance) {
@@ -686,7 +686,7 @@
     $.vegas = {};
     $.vegas.defaults = defaults;
 
-    $.vegas.isVideoCompatible = function () {
+    $.vegas.isVideoCompatible = function() {
         return !/(Android|webOS|Phone|iPad|iPod|BlackBerry|Windows Phone)/i.test(navigator.userAgent);
     };
 
