@@ -36,6 +36,19 @@
 
 /* Lime */
 
+#left-wrapper {
+    min-height: 100vh;
+    background: url("../images/outliarThree.jpg");
+    /* background-attachment: fixed; */
+    background-position-y: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#log-in-alert {
+    display: none;
+}
+
 #amazon {
     height: 25px;
 }
